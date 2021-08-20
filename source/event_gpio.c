@@ -19,6 +19,8 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
+#define LOGD printf
+#define LOGE printf
 
 #include <pthread.h>
 #include <sys/epoll.h>
@@ -85,7 +87,7 @@ int gpio_export(unsigned int gpio)
 {
 	unsigned int gpioSys = gpioToSysPin(gpio);
     int fd, len;
-    char str_gpio[3];
+    char str_gpio[4];   //ja
 
     if ((fd = open("/sys/class/gpio/export", O_WRONLY)) < 0)
        return -1;
@@ -105,7 +107,7 @@ int gpio_unexport(unsigned int gpio)
 {
 	unsigned int gpioSys = gpioToSysPin(gpio);
     int fd, len;
-    char str_gpio[3];
+    char str_gpio[4];   //ja
 
 D    if ((fd = open("/sys/class/gpio/unexport", O_WRONLY)) < 0)
         return -1;
@@ -124,14 +126,15 @@ int gpio_set_direction(unsigned int gpio, unsigned int in_flag)
 {
 	unsigned int gpioSys = gpioToSysPin(gpio);
 	int fd;
-    char filename[33];
+    char filename[35];  //ja
 
-D    snprintf(filename, sizeof(filename), "/sys/class/gpio/gpio%d/direction", gpioSys);
+    snprintf(filename, sizeof(filename), "/sys/class/gpio/gpio%d/direction", gpioSys);
 	if(nanopiDebug)
 		printf("\n /sys/class/gpio/gpio%d/direction \n", gpioSys);
 
-    if ((fd = open(filename, O_WRONLY)) < 0){
-		//printf("open file not succeed !\n");
+    if ((fd = open(filename, O_WRONLY)) < 0){   // do we need to use "| O_CREATE"
+        printf("\nfilename = %s\n", filename);
+		printf("open file not succeed !\n");
         return -1;
 	}
 
@@ -148,7 +151,7 @@ int gpio_set_edge(unsigned int gpio, unsigned int edge)
 {
 	unsigned int gpioSys = gpioToSysPin(gpio);
     int fd;
-    char filename[28];
+    char filename[29];      //ja
 
 D    snprintf(filename, sizeof(filename), "/sys/class/gpio/gpio%d/edge", gpioSys);
 	 if(nanopiDebug)
@@ -166,7 +169,7 @@ int gpio_check(unsigned int gpio)
 {
 	unsigned int gpioSys = gpioToSysPin(gpio);
     int fd;
-    char filename[23];
+    char filename[24];      //ja
 
 D    snprintf(filename, sizeof(filename), "/sys/class/gpio/gpio%d", gpioSys);
     if ((fd = open(filename, O_RDONLY)) < 0)
@@ -180,7 +183,7 @@ int gpio_set_value(unsigned int gpio, unsigned int value)
 {
 	unsigned int gpioSys = gpioToSysPin(gpio);
     int fd;
-    char filename[29];
+    char filename[30];  //ja
 
 D    snprintf(filename, sizeof(filename), "/sys/class/gpio/gpio%d/value", gpioSys);
     if ((fd = open(filename, O_WRONLY)) < 0)
@@ -199,7 +202,7 @@ int gpio_get_value(unsigned int gpio)
 {
 	unsigned int gpioSys = gpioToSysPin(gpio);
     int fd;
-    char filename[29];
+    char filename[30];  //ja
 	char buf;
 
 D    snprintf(filename, sizeof(filename), "/sys/class/gpio/gpio%d/value", gpioSys);
@@ -221,7 +224,7 @@ int gpio_set_pull(unsigned int gpio, unsigned int value)
 {
 	unsigned int gpioSys = gpioToSysPin(gpio);
     int fd;
-    char filename[29];
+    char filename[29];  //ja (was 29 )
 
 D    snprintf(filename, sizeof(filename), "/sys/class/gpio/gpio%d/pull", gpioSys);
     if ((fd = open(filename, O_WRONLY)) < 0)
@@ -242,7 +245,7 @@ int open_value_file(unsigned int gpio)
 {
 	unsigned int gpioSys = gpioToSysPin(gpio);
     int fd;
-    char filename[29];
+    char filename[30];  //ja
 
     // create file descriptor of value file
 	snprintf(filename, sizeof(filename), "/sys/class/gpio/gpio%d/value", gpioSys);
@@ -277,24 +280,28 @@ struct gpios *get_gpio_from_value_fd(int fd)
 struct gpios *new_gpio(unsigned int gpio)
 {
     struct gpios *new_gpio;
-
 D    new_gpio = malloc(sizeof(struct gpios));
-    if (new_gpio == 0)
+    if (new_gpio == 0){
+        LOGD("\nmalloc failed - error\n");
         return NULL;  // out of memory
+    }
 
     new_gpio->gpio = gpio;
     if (gpio_export(gpio) != 0) {
+        LOGD("\ngpio_export() non-zero error\n");
         free(new_gpio);
         return NULL;
     }
     new_gpio->exported = 1;
 
     if (gpio_set_direction(gpio,1) != 0) { // 1==input
+        LOGD("\ngpio_set_direction return non-zero - error \n");
         free(new_gpio);
         return NULL;
     }
 
     if ((new_gpio->value_fd = open_value_file(gpio)) == -1) {
+        LOGD("\nopen_value_file() returned -1 - error\n");
         gpio_unexport(gpio);
         free(new_gpio);
         return NULL;
@@ -514,11 +521,15 @@ int add_edge_detect(unsigned int gpio, unsigned int edge, unsigned int bouncetim
         return 1;
 
     // create epfd if not already open
-    if ((epfd == -1) && ((epfd = epoll_create(1)) == -1))
+    if ((epfd == -1) && ((epfd = epoll_create(1)) == -1)){
+        LOGD("create epfd if not already open - error\n");
         return 2;
+    }
 
-    if ((g = new_gpio(gpio)) == NULL)
+    if ((g = new_gpio(gpio)) == NULL){
+        LOGD("\ngpio = %d, new_gpio(gpio) == NULL - error\n", gpio);
         return 2;
+    }
     
     gpio_set_edge(gpio, edge);
     g->bouncetime = bouncetime;
@@ -528,6 +539,7 @@ int add_edge_detect(unsigned int gpio, unsigned int edge, unsigned int bouncetim
     ev.data.fd = g->value_fd;
     if (epoll_ctl(epfd, EPOLL_CTL_ADD, g->value_fd, &ev) == -1) {
         remove_edge_detect(gpio);
+        LOGD("add to epoll fd - error\n");
         return 2;
     }
 
@@ -535,6 +547,7 @@ int add_edge_detect(unsigned int gpio, unsigned int edge, unsigned int bouncetim
     if (!thread_running) {
         if (pthread_create(&threads, NULL, poll_thread, (void *)t) != 0) {
            remove_edge_detect(gpio);
+           LOGD("start poll thread if it is not already running - error\n");
            return 2;
         }
     }

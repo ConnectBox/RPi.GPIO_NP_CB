@@ -54,8 +54,8 @@ typedef struct {
 //allwinner
 #define ALLWINNER_BASE (7000)
 #define NanoPi_M1 (ALLWINNER_BASE+1)
-#define NanoPi_NEO (ALLWINNER_BASE+2)
-#define NanoPi_NEO_Air (ALLWINNER_BASE+3)
+#define NEO (ALLWINNER_BASE+2)
+#define NEO_Air (ALLWINNER_BASE+3)
 #define NanoPi_M1_Plus (ALLWINNER_BASE+4)
 #define NanoPi_A64 (ALLWINNER_BASE+5)
 #define NanoPi_NEO2 (ALLWINNER_BASE+6)

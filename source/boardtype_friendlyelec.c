@@ -1,8 +1,8 @@
 #include "boardtype_friendlyelec.h"
 #include <ctype.h>
 
-const char* s5p_board_cputempfile = "/sys/class/hwmon/hwmon0/device/temp_label";
-const char* s5p_board_max_cputempfile = "/sys/class/hwmon/hwmon0/device/temp_max";
+const char* s5p_board_cputempfile = "/sys/class/hwmon/hwmon0/device/temp";
+const char* s5p_board_max_cputempfile = "/sys/class/hwmon/hwmon0/device/temp_trip_point_0_temp";
 const char* allwinner_tempfile = "/sys/class/thermal/thermal_zone0/temp";
 
 #define LOGD printf
@@ -35,8 +35,8 @@ BoardHardwareInfo gAllBoardHardwareInfo[] = {
     //allwinner h3
     // kernel 3.x
     {"sun8i", 0, NanoPi_M1, "NanoPi-M1", "0(0)"},
-    {"sun8i", 0, NanoPi_NEO, "NanoPi-NEO", "1(0)"},
-    {"sun8i", 0, NanoPi_NEO_Air, "NanoPi-NEO-Air", "2(0)"},
+    {"sun8i", 0, NEO, "NanoPi-NEO", "1(0)"},
+    {"sun8i", 0, NEO_Air, "NanoPi-NEO-Air", "2(0)"},
     {"sun8i", 0, NanoPi_M1_Plus, "NanoPi-M1-Plus", "3(0)"},
     {"sun8i", 0, NanoPi_Duo, "NanoPi-Duo", "4(0)"},
     {"sun8i", 0, NanoPi_NEO_Core, "NanoPi-NEO-Core", "5(0)"},
@@ -47,8 +47,8 @@ BoardHardwareInfo gAllBoardHardwareInfo[] = {
 
     // kernel 4.x
     {"Allwinnersun8iFamily", 0, NanoPi_M1, "NanoPi-M1", "0(0)"},
-    {"Allwinnersun8iFamily", 0, NanoPi_NEO, "NanoPi-NEO", "1(0)"},
-    {"Allwinnersun8iFamily", 0, NanoPi_NEO_Air, "NanoPi-NEO-Air", "2(0)"},
+    {"Allwinnersun8iFamily", 0, NEO, "NEO", "1(0)"},
+    {"Allwinnersun8iFamily", 0, NEO_Air, "NEO-Air", "2(0)"},
     {"Allwinnersun8iFamily", 0, NanoPi_M1_Plus, "NanoPi-M1-Plus", "3(0)"},
     {"Allwinnersun8iFamily", 0, NanoPi_Duo, "NanoPi-Duo", "4(0)"},
     {"Allwinnersun8iFamily", 0, NanoPi_NEO_Core, "NanoPi-NEO-Core", "5(0)"},
@@ -147,12 +147,12 @@ static int getAllwinnerBoardID(char* boardId, int boardIdMaxLen )
 {
     int n,i,j;
     char lineUntrim[1024], line[1024],*p;
-    const char* sunxi_board_id_fieldname = "sunxi_board_id";
+    const char* sunxi_board_id_fieldname = "FriendlyARM";
     FILE *f;
     int ret = -1;
 
-    if (!(f = fopen("/sys/class/sunxi_info/sys_info", "r"))) {
-        LOGE("open /sys/class/sunxi_info/sys_info failed.");
+    if (!(f = fopen("/proc/device-tree/model", "r"))) {
+        LOGE("open /proc/device-tree/model failed.");
         return -1;
     }
 
@@ -162,7 +162,7 @@ static int getAllwinnerBoardID(char* boardId, int boardIdMaxLen )
         } else {
             j=0;
             for(i=0; i<strlen(lineUntrim);i++) {
-                if (lineUntrim[i] == ' ' || lineUntrim[i] == '\t' || lineUntrim[i] == '\r' || lineUntrim[i] == '\n') {
+                if (lineUntrim[i] == '\t' || lineUntrim[i] == '\r' || lineUntrim[i] == '\n') {
                 } else {
                     line[j++]=lineUntrim[i];
                 }
@@ -170,17 +170,19 @@ static int getAllwinnerBoardID(char* boardId, int boardIdMaxLen )
             line[j] = 0x00;
             n = strlen(line);
             if (n>0) {
-                //LOGD("LINE: %s\n", line);
-                if (p = strtok(line, ":")) {
+               // LOGD("LINE: %s\n", line);
+                if (p = strtok(line, " ")) {
                     if (strncasecmp(p, sunxi_board_id_fieldname, strlen(sunxi_board_id_fieldname)) == 0) {
-                        //LOGD("\t\tkey=\"%s\"\n", p);
-                        if (p = strtok(0, ":")) {
-                            //LOGD("\t\tv=\"%s\"\n", p);
-                            memset(boardId,0,boardIdMaxLen);
-                            strncpy(boardId, p, boardIdMaxLen-1);
-                            ret = 0;
-                            break;
-                        }
+                       // LOGD("\t\tkey=\"%s\"\n", p);
+                        if (p = strtok(NULL, " ")) {
+                           if (p = strtok(NULL, " ")) { 
+                             // LOGD("\t\tv=\"%s\"\n", p);
+                              memset(boardId,0,boardIdMaxLen);
+                              strncpy(boardId, p, boardIdMaxLen-1);
+                              ret = 0;
+                              break;
+                           } else LOGD("\t\t string is=\"%s\"\n", p);
+                        } else  LOGD("\t\tCouldn't find space\n\"%s\"\n", line);
                     }
                 }  
             }
@@ -199,9 +201,9 @@ int getBoardType(BoardHardwareInfo** retBoardInfo) {
     memset(hardware, 0, sizeof(hardware));
     memset(revision, 0, sizeof(revision));
     if ((ret = getFieldValueInCpuInfo(hardware, sizeof(hardware), revision, sizeof(revision))) > 0) {
-        //LOGD("hardware:%s,revision:%s\n", hardware, revision);
+        LOGD("hardware:%s,revision:%s\n", hardware, revision);
     } else {
-        //LOGD("%s, ret:%d\n", "getFieldValueInCpuInfo failed", ret);
+        LOGD("%s, ret:%d\n", "getFieldValueInCpuInfo failed", ret);
         return -1;
     }
 
@@ -210,7 +212,7 @@ int getBoardType(BoardHardwareInfo** retBoardInfo) {
     const char* h3 = "sun8i";
     const char* h5 = "sun50iw2";
     const char* h3_kernel4 = "Allwinnersun8iFamily";
-        const char* h5_kernel4 = "Allwinnersun50iw2Family";
+    const char* h5_kernel4 = "Allwinnersun50iw2Family";
 
     //a64 and amlogic, only check hardware
     if (strncasecmp(hardware, a64, strlen(a64)) == 0 || strncasecmp(hardware, amlogic, strlen(amlogic)) == 0) {
@@ -230,22 +232,22 @@ int getBoardType(BoardHardwareInfo** retBoardInfo) {
         || strncasecmp(hardware, h3_kernel4, strlen(h3_kernel4)) == 0 || strncasecmp(hardware, h5_kernel4, strlen(h5_kernel4)) == 0) {
         int ret = getAllwinnerBoardID(allwinnerBoardID, sizeof(allwinnerBoardID));
         if (ret == 0) {
-            //LOGD("got boardid: %s\n", allwinnerBoardID);
+            LOGD("got boardid: %s\n", allwinnerBoardID);
             for (i=0; i<(sizeof(gAllBoardHardwareInfo)/sizeof(BoardHardwareInfo)); i++) {
                 //LOGD("\t{{ enum, start compare[%d]: %s <--> %s\n", i, gAllBoardHardwareInfo[i].kernelHardware, hardware);
                 if (strncasecmp(gAllBoardHardwareInfo[i].kernelHardware, hardware, strlen(gAllBoardHardwareInfo[i].kernelHardware)) == 0) {
-                    //LOGD("\t\tMATCH %s\n", hardware);
-                    if (strncasecmp(gAllBoardHardwareInfo[i].allwinnerBoardID, allwinnerBoardID, strlen(gAllBoardHardwareInfo[i].allwinnerBoardID)) == 0) {
+                   // LOGD("\t\tMATCH %s\n", hardware);
+                    if (strncasecmp(gAllBoardHardwareInfo[i].boardDisplayName, allwinnerBoardID, strlen(gAllBoardHardwareInfo[i].allwinnerBoardID)) == 0) {
                         if (retBoardInfo != 0) {
                             *retBoardInfo = &gAllBoardHardwareInfo[i];
                         }
-                        //LOGD("\t\t\tMATCH board id: %s\n", allwinnerBoardID);
+                       // LOGD("\t\t\tMATCH board id: %s\n", allwinnerBoardID);
                         return gAllBoardHardwareInfo[i].boardTypeId;
                     } else {
-                        //LOGD("\t\t\tnot match board id: %s\n", allwinnerBoardID);
+                    //    LOGD("\t\t\tnot match board id: %s\n", allwinnerBoardID);
                     }
                 } else {
-                    //LOGD("\t\tnot match %s\n", hardware);
+                   // LOGD("\t\tnot match %s\n", hardware);
                 }
                 //LOGD("\t}} enum, end compare[%d]\n", i);
             }
@@ -254,7 +256,7 @@ int getBoardType(BoardHardwareInfo** retBoardInfo) {
     }
 
     if (strlen(revision) == 0) {
-        //LOGD("failed, revision is empty.");
+        LOGD("failed, revision is empty.");
         return -1;
     }
 

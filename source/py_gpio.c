@@ -686,7 +686,7 @@ PyMODINIT_FUNC initGPIO(void)
 
     if (faBoardId == NanoPi_M1 || faBoardId == NanoPi_M1_Plus || faBoardId == NanoPi_M1_Plus2 || faBoardId == NanoPi_K1_Plus) {
        pin_to_gpio = &physToGpio_m1;
-    } else if (faBoardId == NanoPi_NEO || faBoardId == NanoPi_NEO_Air || faBoardId == NanoPi_NEO2 || faBoardId == NanoPi_NEO_Plus2) {
+    } else if (faBoardId == NEO || faBoardId == NEO_Air || faBoardId == NanoPi_NEO2 || faBoardId == NanoPi_NEO_Plus2) {
        pin_to_gpio = &physToGpio_neo;
     } else if (faBoardId == NanoPi_Duo) {
        pin_to_gpio = &physToGpio_duo;
