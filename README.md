@@ -1,3 +1,12 @@
+This is a fork of the RPi.GPIO_NP from friendlyArm.com (https://github.com/friendlyarm/RPi.GPIO_NP).
+(The orignial of their README.md is reproduced below.) Changes have been made to 5 of the "C" code
+modules to allow it to work with armbian fusion. Also, errors were corrected in the event_gpio.c module
+to fix failing function calls due to undersized char arrarys leading to truncation of filenames.
+
+
+
+----- Original READ.me from https://github.com/friendlyarm/RPi.GPIO_NP  -----
+
 This is a modified version RPi.GPIO for NanoPi NEO/NEO2. We call it RPi.GPIO_NP.
 It is based on the original [RPi.GPIO](https://pypi.python.org/pypi/RPi.GPIO).
 The RPi.GPIO_NP API usage are the same to the original RPi.GPIO.
