@@ -3,6 +3,13 @@ This is a fork of the RPi.GPIO_NP from friendlyArm.com (https://github.com/frien
 modules to allow it to work with armbian fusion. Also, errors were corrected in the event_gpio.c module
 to fix failing function calls due to undersized char arrarys leading to truncation of filenames.
 
+Changed modules are: 
+   boardtype_friendlyelec.c
+   boardtype_friendlyelec.h
+   c_gpio.c
+   py_gpio.c
+   event_gpio.c
+
 
 
 ----- Original READ.me from https://github.com/friendlyarm/RPi.GPIO_NP  -----
