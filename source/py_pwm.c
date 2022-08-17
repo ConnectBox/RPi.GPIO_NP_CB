@@ -26,6 +26,8 @@ SOFTWARE.
 #include "common.h"
 #include "c_gpio.h"
 
+extern gpio_direction[MAX_PIN_COUNT];
+
 typedef struct
 {
     PyObject_HEAD

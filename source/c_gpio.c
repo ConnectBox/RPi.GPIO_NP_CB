@@ -46,13 +46,13 @@ SOFTWARE.
 #define PAGE_SIZE  (4*1024)
 #define BLOCK_SIZE (4*1024)
 
-extern int nanopi_found;
+
 #define	MAX_BUF	1024
 
 #define MAP_SIZE	(4096*2)
 #define MAP_MASK	(MAP_SIZE - 1)
 
-
+extern nanopi_found;
 static volatile uint32_t *gpio_map;
 
 void short_wait(void)

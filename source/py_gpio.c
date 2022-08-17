@@ -31,6 +31,11 @@ SOFTWARE.
 
 static PyObject *rpi_revision;
 static int gpio_warnings = 1;
+int gpio_direction[MAX_PIN_COUNT];
+extern revision
+extern setup_error
+extern module_setup
+extern getBoardType(BoardHardwareInfo** retBoardInfo);
 
 struct py_callback
 {
@@ -644,6 +649,7 @@ PyMODINIT_FUNC initGPIO(void)
    int i;
    PyObject *module = NULL;
 
+
 #if PY_MAJOR_VERSION > 2
    if ((module = PyModule_Create(&rpigpiomodule)) == NULL)
       return NULL;
@@ -658,7 +664,7 @@ PyMODINIT_FUNC initGPIO(void)
       gpio_direction[i] = -1;
 
     BoardHardwareInfo* retBoardInfo;
-    int ret = getBoardType(&retBoardInfo);
+    ret = getBoardType(&retBoardInfo);
     if (ret >= 0) {
       if (retBoardInfo->boardTypeId > ALLWINNER_BASE && retBoardInfo->boardTypeId <= ALLWINNER_MAX 
                 && retBoardInfo->boardTypeId != NanoPi_A64) {

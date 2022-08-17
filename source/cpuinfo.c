@@ -25,6 +25,7 @@ SOFTWARE.
 #include "cpuinfo.h"
 
 int nanopi_found=0;
+extern revision
 
 /*
 char *get_cpuinfo_revision(char *revision)

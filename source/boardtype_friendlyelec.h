@@ -81,6 +81,6 @@ typedef struct {
 #define NanoPi_M4 (RK3399_BASE+2)
 #define NanoPi_NEO4 (RK3399_BASE+3)
 
-extern int getBoardType(BoardHardwareInfo** retBoardInfo);
+
 
 #endif

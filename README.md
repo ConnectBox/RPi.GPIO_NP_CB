@@ -2,7 +2,8 @@ This is a fork of the RPi.GPIO_NP from friendlyArm.com (https://github.com/frien
 (The orignial of their README.md is reproduced below.) Changes have been made to 4 of the "C" code
 modules to allow it to work with armbian fusion. Additionally, errors were corrected in the event_gpio.c module
 to fix failing function calls due to undersized char arrarys leading to truncation of filenames. Follow 
-the Installation instructions from the original READ.me to compile and install. 
+the Installation instructions from the original READ.me to compile and install.   Additionally errors in compilation
+have been fixed by multiple definitions of variables.
 
 ### Changed modules are:
 
@@ -10,7 +11,8 @@ the Installation instructions from the original READ.me to compile and install.
   boardtype_friendlyelec.h  
   c_gpio.c    
   py_gpio.c  
-  event_gpio.c  
+  event_gpio.c
+  common.c  
 
 (Note that these revisions have only been tested with a NanoPi NEO.)
 
