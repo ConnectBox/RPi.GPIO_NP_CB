@@ -266,9 +266,9 @@ const int physToGpioR3 [MAX_PIN_COUNT] =//head num map to BCMpin
 } ;
 */
 
-int setup_error = 0;
-int module_setup = 0;
-int revision = -1;
+setup_error = 0;
+module_setup = 0;
+revision = -1;
 
 extern int nanopi_found;
 
