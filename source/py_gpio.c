@@ -32,16 +32,23 @@ SOFTWARE.
 static PyObject *rpi_revision;
 static int gpio_warnings = 1;
 int gpio_direction[MAX_PIN_COUNT];
-extern revision
-extern setup_error
-extern module_setup
-extern getBoardType(BoardHardwareInfo** retBoardInfo);
+extern int revision;
+extern int setup_error;
+extern int module_setup;
+extern int getBoardType(BoardHardwareInfo** retBoardInfo);
+extern const int *physToGpio_neocore;
+extern const int *physToGpio_neo;
+extern const int *physToGpio_duo;
+extern const int *physToGpio_duo2;
+extern const int *physToGpio_m1;
+extern char gpio_mode;
+int ret;
 
 struct py_callback
 {
    unsigned int gpio;
    PyObject *py_cb;
-   struct py_callback *next;
+   struct py_callback *next; 
 };
 static struct py_callback *py_callbacks = NULL;
 
@@ -717,8 +724,8 @@ PyMODINIT_FUNC initGPIO(void)
    Py_INCREF(&PWMType);
    PyModule_AddObject(module, "PWM", (PyObject*)&PWMType);
 
-   if (!PyEval_ThreadsInitialized())
-      PyEval_InitThreads();
+   if (!Py_IsInitialized())								#nEW AS OF VERSION 3.7
+      Py_Initialize();									#New as of version 3.7
 
    // register exit functions - last declared is called first
    if (Py_AtExit(cleanup) != 0)

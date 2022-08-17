@@ -25,6 +25,7 @@ SOFTWARE.
 #include <fcntl.h>
 #include <sys/mman.h>
 #include "c_gpio.h"
+#include <stdio.h>
 
 #define GPIO_BASE_BP		(0x01C20000)  //Keep pace with Wiringpi 	
 #define SUNXI_GPIO_BASE		(0x01C20800)	
@@ -52,7 +53,7 @@ SOFTWARE.
 #define MAP_SIZE	(4096*2)
 #define MAP_MASK	(MAP_SIZE - 1)
 
-extern nanopi_found;
+extern int nanopi_found;
 static volatile uint32_t *gpio_map;
 
 void short_wait(void)

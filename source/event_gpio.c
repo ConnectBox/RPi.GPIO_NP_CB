@@ -57,7 +57,7 @@ struct callback
 };
 struct callback *callbacks = NULL;
 
-pthread_t threads;
+extern pthread_t threads;
 int event_occurred[MAX_PIN_COUNT] = { 0 };
 int thread_running = 0;
 int epfd = -1;
