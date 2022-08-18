@@ -226,7 +226,7 @@ int gpio_set_pull(unsigned int gpio, unsigned int value)
     int fd;
     char filename[29];  //ja (was 29 )
 
-D    snprintf(filename, sizeof(filename), "/sys/class/gpio/gpio%d/pull", gpioSys);
+    snprintf(filename, sizeof(filename), "/sys/class/gpio/gpio%d/pull", gpioSys);
     if ((fd = open(filename, O_WRONLY)) < 0)
         return -1;
 

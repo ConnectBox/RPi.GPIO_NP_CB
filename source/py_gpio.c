@@ -50,6 +50,10 @@ extern int gpio_function(int gpio);
 extern void output_gpio(int gpio, int value);
 extern int input_gpio(int gpio);
 extern void cleanup(void);
+extern int setup();
+extern int get_gpio_number(int channel, unsigned int *gpio)
+extern int check_gpio_priv(void)
+
 int ret;
 
 struct py_callback
@@ -673,7 +677,7 @@ PyMODINIT_FUNC initGPIO(void)
       return;
 #endif
 
-   define_constants(module);
+void define_constants(PyObject *module);
 
    for (i=0; i<MAX_PIN_COUNT; i++)
       gpio_direction[i] = -1;

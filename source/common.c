@@ -27,7 +27,7 @@ SOFTWARE.
 int gpio_mode = MODE_UNKNOWN;
 const int pin_to_gpio_rev1[27];
 const int pin_to_gpio_rev2[27];
-extern nanopi_found;
+extern int nanopi_found;
 const int(*pin_to_gpio)[MAX_PIN_COUNT];
 
 
