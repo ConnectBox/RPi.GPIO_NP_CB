@@ -43,7 +43,7 @@ extern const int *physToGpio_duo2;
 extern const int *physToGpio_m1;
 extern char gpio_mode;
 extern const int(*pin_to_gpio)[];
-extern PyTypeObject (*PWM_init_PWMType(void);
+extern PyTypeObject (*PWM_init_PWMType(void));
 extern PyTypeObject PWMType;
 extern void setup_gpio(int gpio, int direction, int pud);
 extern int gpio_function(int gpio);
@@ -732,8 +732,8 @@ PyMODINIT_FUNC initGPIO(void)
    Py_INCREF(&PWMType);
    PyModule_AddObject(module, "PWM", (PyObject*)&PWMType);
 
-   if (!Py_IsInitialized())								#nEW AS OF VERSION 3.7
-      Py_Initialize();									#New as of version 3.7
+   if (!Py_IsInitialized())								//nEW AS OF VERSION 3.7
+      Py_Initialize();									//New as of version 3.7
 
    // register exit functions - last declared is called first
    if (Py_AtExit(cleanup) != 0)

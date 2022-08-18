@@ -11,4 +11,4 @@ GPIO.setup(15,GPIO.OUT)
 
 for pin in validPins:
 	fun = GPIO.gpio_function(pin)
-	print fun
+	print(fun)
