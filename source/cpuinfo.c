@@ -25,7 +25,7 @@ SOFTWARE.
 #include "cpuinfo.h"
 
 extern nanopi_found;
-extern int crevision;
+extern int revision;
 
 
 /*
