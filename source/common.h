@@ -31,10 +31,5 @@ SOFTWARE.
 
 #define MAX_PIN_COUNT 74
 
-const int pin_to_gpio_rev1[27];
-const int pin_to_gpio_rev2[27];
-const int physToGpioR3 [MAX_PIN_COUNT];
-
-const int (*pin_to_gpio)[MAX_PIN_COUNT];
 
 

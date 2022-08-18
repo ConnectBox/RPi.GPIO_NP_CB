@@ -25,6 +25,11 @@ SOFTWARE.
 #include "common.h"
 
 int gpio_mode = MODE_UNKNOWN;
+const int pin_to_gpio_rev1[27];
+const int pin_to_gpio_rev2[27];
+extern nanopi_found;
+const int(*pin_to_gpio)[MAX_PIN_COUNT];
+
 
 const int physToGpio_neo [MAX_PIN_COUNT] ={
     -1, 
@@ -270,7 +275,6 @@ int setup_error = 0;
 int module_setup = 0;
 int revision = -1;
 
-int nanopi_found;
 
 int check_gpio_priv(void)
 {

@@ -42,6 +42,14 @@ extern const int *physToGpio_duo;
 extern const int *physToGpio_duo2;
 extern const int *physToGpio_m1;
 extern char gpio_mode;
+extern const int(*pin_to_gpio)[];
+extern PyTypeObject (*PWM_init_PWMType(void);
+extern PyTypeObject PWMType;
+extern void setup_gpio(int gpio, int direction, int pud);
+extern int gpio_function(int gpio);
+extern void output_gpio(int gpio, int value);
+extern int input_gpio(int gpio);
+extern void cleanup(void);
 int ret;
 
 struct py_callback

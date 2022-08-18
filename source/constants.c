@@ -26,6 +26,27 @@ SOFTWARE.
 #include "c_gpio.h"
 #include "event_gpio.h"
 
+PyObject* high;
+PyObject* low;
+PyObject* input;
+PyObject* output;
+PyObject* pwm;
+PyObject* serial;
+PyObject* i2c;
+PyObject* spi;
+PyObject* unknown;
+PyObject* board;
+PyObject* bcm;
+PyObject* raw;
+PyObject* pud_off;
+PyObject* pud_up;
+PyObject* pud_down;
+PyObject* rising_edge;
+PyObject* falling_edge;
+PyObject* both_edge;
+PyObject* version;
+
+
 void define_constants(PyObject *module)
 {
    high = Py_BuildValue("i", HIGH);
@@ -95,3 +116,4 @@ void define_constants(PyObject *module)
    PyModule_AddObject(module, "PH", Py_BuildValue("i", 224));
    PyModule_AddObject(module, "PI", Py_BuildValue("i", 256));
 }
+

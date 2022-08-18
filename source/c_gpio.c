@@ -53,7 +53,7 @@ SOFTWARE.
 #define MAP_SIZE	(4096*2)
 #define MAP_MASK	(MAP_SIZE - 1)
 
-extern int nanopi_found;
+int nanopi_found = 0;
 static volatile uint32_t *gpio_map;
 
 void short_wait(void)

@@ -26,6 +26,8 @@ SOFTWARE.
 #include "c_gpio.h"
 #include "soft_pwm.h"
 pthread_t threads;
+extern void output_gpio(int gpio, int value);
+
 
 struct pwm
 {
