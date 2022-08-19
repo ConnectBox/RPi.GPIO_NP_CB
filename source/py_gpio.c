@@ -51,8 +51,8 @@ extern void output_gpio(int gpio, int value);
 extern int input_gpio(int gpio);
 extern void cleanup(void);
 extern int setup();
-extern int get_gpio_number(int channel, unsigned int *gpio)
-extern int check_gpio_priv(void)
+extern get_gpio_number(int channel, unsigned int *gpio);
+extern int check_gpio_priv(void);
 
 int ret;
 
@@ -62,7 +62,7 @@ struct py_callback
    PyObject *py_cb;
    struct py_callback *next; 
 };
-static struct py_callback *py_callbacks = NULL;
+static struct py_callback;			 //by default py_callback is initialized to null
 
 static int mmap_gpio_mem(void)
 {
@@ -631,10 +631,10 @@ static PyObject *py_setwarnings(PyObject *self, PyObject *args)
    Py_RETURN_NONE;
 }
 
-static const char moduledocstring[] = "GPIO functionality of a NanoPi using Python";
+static const std::string moduledocstring[] = "GPIO functionality of a NanoPi using Python";
 
 PyMethodDef rpi_gpio_methods[] = {
-   {"setup", (PyCFunction)py_setup_channel, METH_VARARGS | METH_KEYWORDS, "Set up the GPIO channel, direction and (optional) pull/up down control\nchannel        - either board pin number or BCM number depending on which mode is set.\ndirection      - INPUT or OUTPUT\n[pull_up_down] - PUD_OFF (default), PUD_UP or PUD_DOWN\n[initial]      - Initial value for an output channel"},
+   {"setup", (PyCFunction)py_setup_channel, METH_VARARGS | METH_KEYWORDS, "Set up the GPIO channel, direction and (optional) pull/up down control\nchannel        - either  board pin number or BCM number depending on which mode is set.\ndirection      - INPUT or OUTPUT\n[pull_up_down] - PUD_OFF (default), PUD_UP or PUD_DOWN\n[initial]      - Initial value for an output channel"},
    {"cleanup", (PyCFunction)py_cleanup, METH_VARARGS | METH_KEYWORDS, "Clean up by resetting all GPIO channels that have been used by this program to INPUT with no pullup/pulldown and no event detection\n[channel] - individual channel to clean up.  Default - clean every channel that has been used."},
    {"output", py_output_gpio, METH_VARARGS, "Output to a GPIO channel\nchannel - either board pin number or BCM number depending on which mode is set.\nvalue   - 0/1 or False/True or LOW/HIGH"},
    {"input", py_input_gpio, METH_VARARGS, "Input from a GPIO channel.  Returns HIGH=1=True or LOW=0=False\nchannel - either board pin number or BCM number depending on which mode is set."},
@@ -646,7 +646,7 @@ PyMethodDef rpi_gpio_methods[] = {
    {"wait_for_edge", py_wait_for_edge, METH_VARARGS, "Wait for an edge.\nchannel - either board pin number or BCM number depending on which mode is set.\nedge    - RISING, FALLING or BOTH"},
    {"gpio_function", py_gpio_function, METH_VARARGS, "Return the current GPIO function (IN, OUT, PWM, SERIAL, I2C, SPI)\nchannel - either board pin number or BCM number depending on which mode is set."},
    {"setwarnings", py_setwarnings, METH_VARARGS, "Enable or disable warning messages"},
-   {NULL, NULL, 0, NULL}
+   {NULL, NULL}
 };
 
 #if PY_MAJOR_VERSION > 2
