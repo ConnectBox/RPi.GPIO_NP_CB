@@ -62,7 +62,11 @@ struct py_callback
    PyObject *py_cb;
    struct py_callback *next; 
 };
-static struct py_callback;			 //by default py_callback is initialized to null
+
+static struct py_callback
+{
+	PyObject *py_cb1;
+};			 //by default py_callback is initialized to null
 
 static int mmap_gpio_mem(void)
 {
