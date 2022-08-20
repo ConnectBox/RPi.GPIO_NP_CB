@@ -36,11 +36,11 @@ extern int revision;
 extern int setup_error;
 extern int module_setup;
 extern int getBoardType(BoardHardwareInfo** retBoardInfo);
-extern const int *physToGpio_neocore;
-extern const int *physToGpio_neo;
-extern const int *physToGpio_duo;
-extern const int *physToGpio_duo2;
-extern const int *physToGpio_m1;
+extern const int physToGpio_neocore;
+extern const int physToGpio_neo;
+extern const int physToGpio_duo;
+extern const int physToGpio_duo2;
+extern const int physToGpio_m1;
 extern char gpio_mode;
 extern const int(*pin_to_gpio)[];
 extern PyTypeObject (*PWM_init_PWMType(void));
@@ -63,10 +63,7 @@ struct py_callback
    struct py_callback *next; 
 };
 
-static struct py_callback
-{
-	PyObject *py_cb1;
-};			 //by default py_callback is initialized to null
+struct py_callback *Py_callbacks;
 
 static int mmap_gpio_mem(void)
 {
@@ -635,7 +632,7 @@ static PyObject *py_setwarnings(PyObject *self, PyObject *args)
    Py_RETURN_NONE;
 }
 
-static const std::string moduledocstring[] = "GPIO functionality of a NanoPi using Python";
+static const char moduledocstring[] = "GPIO functionality of a NanoPi using Python";
 
 PyMethodDef rpi_gpio_methods[] = {
    {"setup", (PyCFunction)py_setup_channel, METH_VARARGS | METH_KEYWORDS, "Set up the GPIO channel, direction and (optional) pull/up down control\nchannel        - either  board pin number or BCM number depending on which mode is set.\ndirection      - INPUT or OUTPUT\n[pull_up_down] - PUD_OFF (default), PUD_UP or PUD_DOWN\n[initial]      - Initial value for an output channel"},
