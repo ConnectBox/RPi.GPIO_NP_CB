@@ -56,14 +56,14 @@ extern int check_gpio_priv(void);
 
 int ret;
 
-struct py_callback
+py_callback
 {
    unsigned int gpio;
    PyObject *py_cb;
    struct py_callback *next; 
 };
 
-static struct py_callback *Py_callbacks;
+static struct py_callback *py_callbacks = NULL;
 
 static int mmap_gpio_mem(void)
 {
@@ -123,12 +123,14 @@ static PyObject *py_cleanup(PyObject *self, PyObject *args, PyObject *kwargs)
          event_cleanup(gpio);
 
          // set everything back to input
-         if (gpio_direction[gpio] != -1) {
-            setup_gpio(gpio, INPUT, PUD_OFF);
-            gpio_direction[i] = -1;
-            found = 1;
-         }
-      }
+		 for (i=0; i<MAX_PIN_COUNT; i++) {
+            if (gpio_direction[gpio] != -1) {
+               setup_gpio(gpio, INPUT, PUD_OFF);
+               gpio_direction[i] = -1;
+               found = 1;
+            }
+        }
+	  }
    }
 
    // check if any channels set up - if not warn about misuse of GPIO.cleanup()

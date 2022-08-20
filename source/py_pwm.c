@@ -25,16 +25,18 @@ SOFTWARE.
 #include "py_pwm.h"
 #include "common.h"
 #include "c_gpio.h"
-extern int get_gpio_number(int channel, unsigned int *gpio)
-extern int gpio_direction[MAX_PIN_COUNT];
+extern  int get_gpio_number(int channel, unsigned int *gpio);
+extern  int gpio_direction[MAX_PIN_COUNT];
 
-typedef struct
+struct pwmstructure
 {
     PyObject_HEAD
     unsigned int gpio;
     float freq;
     float dutycycle;
-} PWMObject;
+};
+
+typedef struct pwmstructure PWMObject
 
 // python method PWM.__init__(self, channel, frequency)
 static int PWM_init(PWMObject *self, PyObject *args, PyObject *kwds)
