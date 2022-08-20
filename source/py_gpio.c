@@ -63,7 +63,7 @@ struct py_callback
    struct py_callback *next; 
 };
 
-struct py_callback *Py_callbacks;
+static struct py_callback *Py_callbacks;
 
 static int mmap_gpio_mem(void)
 {

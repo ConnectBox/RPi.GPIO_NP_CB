@@ -205,7 +205,7 @@ int gpio_get_value(unsigned int gpio)
     char filename[30];  //ja
 	char buf;
 
-D    snprintf(filename, sizeof(filename), "/sys/class/gpio/gpio%d/value", gpioSys);
+    snprintf(filename, sizeof(filename), "/sys/class/gpio/gpio%d/value", gpioSys);
     if ((fd = open(filename, O_RDONLY)) < 0)
         return -1;
 
@@ -230,11 +230,11 @@ int gpio_set_pull(unsigned int gpio, unsigned int value)
     if ((fd = open(filename, O_WRONLY)) < 0)
         return -1;
 
-	if (value == PUD_DOWN) //pull down
+    if (value == PUD_DOWN) //pull down
         write(fd, "down", 5);
-	else if (value == PUD_UP) //pull up
+    else if (value == PUD_UP) //pull up
         write(fd, "up", 3);
-	else //default == PUD_OFF, pull disable
+    else //default == PUD_OFF, pull disable
 	    write(fd, "disable", 8);
 
     close(fd);
