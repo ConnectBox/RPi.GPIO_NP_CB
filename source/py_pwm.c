@@ -36,7 +36,7 @@ struct pwmstructure
     float dutycycle;
 };
 
-typedef struct pwmstructure PWMObject
+typedef struct pwmstructure PWMObject;
 
 // python method PWM.__init__(self, channel, frequency)
 static int PWM_init(PWMObject *self, PyObject *args, PyObject *kwds)

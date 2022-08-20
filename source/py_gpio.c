@@ -51,12 +51,12 @@ extern void output_gpio(int gpio, int value);
 extern int input_gpio(int gpio);
 extern void cleanup(void);
 extern int setup();
-extern get_gpio_number(int channel, unsigned int *gpio);
+extern int get_gpio_number(int channel, unsigned int *gpio);
 extern int check_gpio_priv(void);
 
 int ret;
 
-py_callback
+struct py_callback
 {
    unsigned int gpio;
    PyObject *py_cb;
