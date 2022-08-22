@@ -42,6 +42,7 @@ extern const int physToGpio_duo2;
 extern const int physToGpio_m1;
 extern const int gpio_mode;
 extern const int(*pin_to_gpio)[];
+extern int define_constants(PyObject *module);
 extern int getBoardType(BoardHardwareInfo** retBoardInfo);
 extern PyTypeObject (*PWM_init_PWMType(void));
 extern PyTypeObject PWMType;
@@ -680,7 +681,8 @@ PyMODINIT_FUNC initGPIO(void)
       return;
 #endif
 
-extern define_constants(PyObject *module);
+   define_constants(PyObject *module);
+
 
    for (i=0; i<MAX_PIN_COUNT; i++)
       gpio_direction[i] = -1;
