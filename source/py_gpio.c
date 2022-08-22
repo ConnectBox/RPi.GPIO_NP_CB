@@ -32,9 +32,9 @@ SOFTWARE.
 static PyObject *rpi_revision;
 static int gpio_warnings = 1;
 int gpio_direction[MAX_PIN_COUNT];
-extern const int revision;
-extern const int setup_error;
-extern const int module_setup;
+extern int revision;
+extern int setup_error;
+extern int module_setup;
 extern const int physToGpio_neocore;
 extern const int physToGpio_neo;
 extern const int physToGpio_duo;
