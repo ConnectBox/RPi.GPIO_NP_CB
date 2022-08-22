@@ -681,7 +681,7 @@ PyMODINIT_FUNC initGPIO(void)
       return;
 #endif
 
-   define_constants(PyObject *module);
+   define_constants(module);
 
 
    for (i=0; i<MAX_PIN_COUNT; i++)
