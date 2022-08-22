@@ -176,7 +176,7 @@ static int getAllwinnerBoardID(char* boardId, int boardIdMaxLen )
                               strncpy(boardId, p, boardIdMaxLen-1);
                               ret = 0;
                               break;
-                           } else;
+                           } else; 
                         } else;
                     }
                 }  
