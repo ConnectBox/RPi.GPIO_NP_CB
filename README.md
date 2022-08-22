@@ -13,6 +13,7 @@ have been fixed by multiple definitions of variables.
   py_gpio.c  
   event_gpio.c
   common.c  
+  Python 3.9 usage
 
 (Note that these revisions have only been tested with a NanoPi NEO.)
 

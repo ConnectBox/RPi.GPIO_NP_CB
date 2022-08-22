@@ -32,17 +32,17 @@ SOFTWARE.
 static PyObject *rpi_revision;
 static int gpio_warnings = 1;
 int gpio_direction[MAX_PIN_COUNT];
-extern int revision;
-extern int setup_error;
-extern int module_setup;
-extern int getBoardType(BoardHardwareInfo** retBoardInfo);
+extern const int revision;
+extern const int setup_error;
+extern const int module_setup;
 extern const int physToGpio_neocore;
 extern const int physToGpio_neo;
 extern const int physToGpio_duo;
 extern const int physToGpio_duo2;
 extern const int physToGpio_m1;
-extern char gpio_mode;
+extern const int gpio_mode;
 extern const int(*pin_to_gpio)[];
+extern int getBoardType(BoardHardwareInfo** retBoardInfo);
 extern PyTypeObject (*PWM_init_PWMType(void));
 extern PyTypeObject PWMType;
 extern void setup_gpio(int gpio, int direction, int pud);
@@ -649,7 +649,7 @@ PyMethodDef rpi_gpio_methods[] = {
    {"wait_for_edge", py_wait_for_edge, METH_VARARGS, "Wait for an edge.\nchannel - either board pin number or BCM number depending on which mode is set.\nedge    - RISING, FALLING or BOTH"},
    {"gpio_function", py_gpio_function, METH_VARARGS, "Return the current GPIO function (IN, OUT, PWM, SERIAL, I2C, SPI)\nchannel - either board pin number or BCM number depending on which mode is set."},
    {"setwarnings", py_setwarnings, METH_VARARGS, "Enable or disable warning messages"},
-   {NULL, NULL}
+   {NULL, NULL, 0, NULL}
 };
 
 #if PY_MAJOR_VERSION > 2
@@ -680,7 +680,7 @@ PyMODINIT_FUNC initGPIO(void)
       return;
 #endif
 
-void define_constants(PyObject *module);
+extern define_constants(PyObject *module);
 
    for (i=0; i<MAX_PIN_COUNT; i++)
       gpio_direction[i] = -1;
